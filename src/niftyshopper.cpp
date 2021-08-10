@@ -1,13 +1,18 @@
 #include <niftyshopper.hpp>
 
-#include <algorithm>
-#include <math.h>
-
 #include "contract_actions.cpp"
 
 void niftyshopper::maintenace_check()
 {
     eosio::check(!get_config().get().maintenance, "Contract is in maintenance");
+}
+
+void niftyshopper::receive_asset_transfer(
+    eosio::name from,
+    eosio::name to,
+    std::vector<uint64_t> asset_ids,
+    std::string memo)
+{
 }
 
 void niftyshopper::receive_token_transfer(
@@ -30,7 +35,7 @@ void niftyshopper::receive_token_transfer(
         uint64_t asset_id = static_cast<uint64_t>(std::stoull(memo.erase(0, 4)));
 
         // Check if the contract still owns the asset
-        auto asset = atomicassets::get_assets(to).require_find(asset_id, "Contract does not own asset");
+        auto asset = atomicassets::get_assets(get_self()).require_find(asset_id, "Contract does not own asset");
 
         // Get store
         auto store = get_store();
@@ -38,7 +43,7 @@ void niftyshopper::receive_token_transfer(
 
         // Check if item can be bought
         eosio::check(entity->token_contract == get_first_receiver(), "Token contract does not match");
-        eosio::check(entity->buy_price == token, "Token does not match");
+        eosio::check(entity->buy_price == token, "Token price does not match");
 
         // Send item
         eosio::action(
@@ -49,7 +54,7 @@ void niftyshopper::receive_token_transfer(
                 get_self(),
                 from,
                 std::vector<uint64_t>{asset_id},
-                std::string("Bought item")))
+                std::string("Bought NFT")))
             .send();
     }
     else
