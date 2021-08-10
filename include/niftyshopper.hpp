@@ -26,7 +26,8 @@ public:
         uint64_t template_id,
 
         eosio::name token_contract,
-        eosio::asset buy_price);
+        eosio::asset buy_price,
+        bool burn_token);
 
     [[eosio::action]] void rmstore(
         uint64_t template_id);
@@ -48,6 +49,8 @@ private:
 
         eosio::name token_contract;
         eosio::asset buy_price;
+
+        bool burn_token;
 
         uint64_t primary_key() const { return template_id; }
     };

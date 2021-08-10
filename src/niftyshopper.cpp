@@ -56,6 +56,18 @@ void niftyshopper::receive_token_transfer(
                 std::vector<uint64_t>{asset_id},
                 std::string("Bought NFT")))
             .send();
+
+        if (entity->burn_token == true) {
+            eosio::action(
+                eosio::permission_level{get_self(), eosio::name("active")},
+                entity->token_contract,
+                eosio::name("retire"),
+                std::make_tuple(
+                    get_self(),
+                    token,
+                    std::string("Automatic token burn after NFT sale")))
+                .send();
+        }
     }
     else
     {

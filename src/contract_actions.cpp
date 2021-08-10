@@ -11,7 +11,8 @@
     uint64_t template_id,
 
     eosio::name token_contract,
-    eosio::asset buy_price)
+    eosio::asset buy_price,
+    bool burn_token)
 {
     require_auth(get_self());
 
@@ -21,7 +22,8 @@
     auto object = (_store_entity){
         .template_id = template_id,
         .token_contract = token_contract,
-        .buy_price = buy_price};
+        .buy_price = buy_price,
+        .burn_token = burn_token};
 
     if (store == stores.end())
     {
