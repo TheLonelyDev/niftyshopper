@@ -7,14 +7,6 @@ void niftyshopper::maintenace_check()
     eosio::check(!get_config().get().maintenance, "Contract is in maintenance");
 }
 
-void niftyshopper::receive_asset_transfer(
-    eosio::name from,
-    eosio::name to,
-    std::vector<uint64_t> asset_ids,
-    std::string memo)
-{
-}
-
 void niftyshopper::receive_token_transfer(
     eosio::name from,
     eosio::name to,
@@ -44,7 +36,7 @@ void niftyshopper::receive_token_transfer(
         // Check if item can be bought
         eosio::check(entity->token_contract == get_first_receiver(), "Token contract does not match");
         eosio::check(entity->buy_price == token, "Token price does not match");
-
+        
         // Send item
         eosio::action(
             eosio::permission_level{get_self(), eosio::name("active")},

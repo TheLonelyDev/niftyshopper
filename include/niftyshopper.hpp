@@ -16,12 +16,6 @@ public:
         eosio::asset quantity,
         std::string memo);
 
-    void receive_asset_transfer(
-        eosio::name from,
-        eosio::name to,
-        std::vector<uint64_t> asset_ids,
-        std::string memo);
-
     [[eosio::action]] void setstore(
         uint64_t template_id,
 
@@ -77,10 +71,6 @@ extern "C" void apply(uint64_t receiver, uint64_t code, uint64_t action)
         {
             EOSIO_DISPATCH_HELPER(niftyshopper, (setstore)(rmstore)(init)(destruct)(maintenance))
         }
-    }
-    else if (code == atomicassets::ATOMICASSETS_ACCOUNT.value && action == eosio::name("transfer").value)
-    {
-        eosio::execute_action(eosio::name(receiver), eosio::name(code), &niftyshopper::receive_asset_transfer);
     }
     else if (action == eosio::name("transfer").value)
     {
