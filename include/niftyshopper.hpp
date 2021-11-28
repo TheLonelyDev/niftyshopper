@@ -72,7 +72,7 @@ extern "C" void apply(uint64_t receiver, uint64_t code, uint64_t action)
             EOSIO_DISPATCH_HELPER(niftyshopper, (setstore)(rmstore)(init)(destruct)(maintenance))
         }
     }
-    else if (action == eosio::name("transfer").value)
+    else if (code != atomicassets::ATOMICASSETS_ACCOUNT.value && action == eosio::name("transfer").value)
     {
         eosio::execute_action(eosio::name(receiver), eosio::name(code), &niftyshopper::receive_token_transfer);
     }

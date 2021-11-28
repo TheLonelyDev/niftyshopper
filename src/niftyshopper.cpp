@@ -13,7 +13,7 @@ void niftyshopper::receive_token_transfer(
     eosio::asset token,
     std::string memo)
 {
-    if (to != get_self() || memo == "ignore_memo")
+    if (from == get_self() || to != get_self() || memo == "ignore_memo")
     {
         return;
     }
