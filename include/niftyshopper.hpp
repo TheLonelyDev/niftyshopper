@@ -10,17 +10,17 @@ CONTRACT niftyshopper : public eosio::contract
 public:
     using eosio::contract::contract;
 
-    void receive_token_transfer(
-        eosio::name from,
-        eosio::name to,
-        eosio::asset quantity,
-        std::string memo);
+    [[eosio::on_notify("*::transfer")]] void receive_token_transfer(
+        eosio::name & from,
+        eosio::name & to,
+        eosio::asset & quantity,
+        std::string & memo);
 
     [[eosio::action]] void setstore(
         uint64_t template_id,
 
-        eosio::name token_contract,
-        eosio::asset buy_price,
+        eosio::name & token_contract,
+        eosio::asset & buy_price,
         bool burn_token);
 
     [[eosio::action]] void rmstore(
@@ -62,18 +62,3 @@ private:
 
     void maintenace_check();
 };
-
-extern "C" void apply(uint64_t receiver, uint64_t code, uint64_t action)
-{
-    if (code == receiver)
-    {
-        switch (action)
-        {
-            EOSIO_DISPATCH_HELPER(niftyshopper, (setstore)(rmstore)(init)(destruct)(maintenance))
-        }
-    }
-    else if (code != atomicassets::ATOMICASSETS_ACCOUNT.value && action == eosio::name("transfer").value)
-    {
-        eosio::execute_action(eosio::name(receiver), eosio::name(code), &niftyshopper::receive_token_transfer);
-    }
-}
