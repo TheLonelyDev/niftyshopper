@@ -7,11 +7,11 @@
 
     @auth self
 */
-[[eosio::action]] void niftyshopper::setstore(
+void niftyshopper::setstore(
     uint64_t template_id,
 
-    eosio::name token_contract,
-    eosio::asset buy_price,
+    eosio::name &token_contract,
+    eosio::asset &buy_price,
     bool burn_token)
 {
     require_auth(get_self());
@@ -44,7 +44,7 @@
 
     @auth self
 */
-[[eosio::action]] void niftyshopper::rmstore(
+void niftyshopper::rmstore(
     uint64_t template_id)
 {
     require_auth(get_self());
@@ -60,7 +60,7 @@
 
     @auth self
 */
-[[eosio::action]] void niftyshopper::init()
+void niftyshopper::init()
 {
     require_auth(get_self());
     get_config().remove();
@@ -73,7 +73,7 @@
 
     @auth self
 */
-[[eosio::action]] void niftyshopper::destruct()
+void niftyshopper::destruct()
 {
     require_auth(get_self());
     get_config().remove();
@@ -88,7 +88,7 @@
 
     @auth self
 */
-[[eosio::action]] void niftyshopper::maintenance(bool maintenance)
+void niftyshopper::maintenance(bool maintenance)
 {
     require_auth(get_self());
 
