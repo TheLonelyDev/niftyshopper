@@ -16,6 +16,15 @@ public:
         eosio::asset & quantity,
         std::string & memo);
 
+    // atomicassets listener in order to prevent issues on *::transfer
+    // this has priortiy over the wildcard *
+    // this notify actions does nothing functionality wise
+    [[eosio::on_notify("atomicassets::transfer")]] void _dummy_aa(
+        eosio::name & from,
+        eosio::name & to,
+        std::vector<uint64_t> & asset_ids,
+        std::string & memo);
+
     [[eosio::action]] void setstore(
         uint64_t template_id,
 

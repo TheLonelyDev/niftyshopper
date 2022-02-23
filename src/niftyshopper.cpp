@@ -69,7 +69,6 @@ void niftyshopper::receive_token_transfer(
                 entity->token_contract,
                 eosio::name("retire"),
                 std::make_tuple(
-                    get_self(),
                     token,
                     std::string("Automatic token burn after NFT sale")))
                 .send();
