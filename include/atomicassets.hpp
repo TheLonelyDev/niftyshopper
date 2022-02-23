@@ -1,8 +1,4 @@
-/*
-This file is not used for the actual atomicassets contract.
-It can be used as a header file for other contracts to access the atomicassets tables
-and custom data types.
-*/
+#pragma once
 
 #include <eosio/eosio.hpp>
 #include <eosio/asset.hpp>
@@ -11,7 +7,7 @@ namespace atomicassets
 {
     static constexpr eosio::name ATOMICASSETS_ACCOUNT = eosio::name("atomicassets");
 
-    //Scope: owner
+    // Scope: owner
     struct assets_s
     {
         uint64_t asset_id;
