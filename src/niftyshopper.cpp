@@ -8,10 +8,10 @@ void niftyshopper::maintenace_check()
 }
 
 void niftyshopper::receive_token_transfer(
-    eosio::name from,
-    eosio::name to,
-    eosio::asset token,
-    std::string memo)
+    eosio::name &from,
+    eosio::name &to,
+    eosio::asset &token,
+    std::string &memo)
 {
     if (from == get_self() || to != get_self() || memo == "ignore_memo")
     {
@@ -36,7 +36,7 @@ void niftyshopper::receive_token_transfer(
         // Check if item can be bought
         eosio::check(entity->token_contract == get_first_receiver(), "Token contract does not match");
         eosio::check(entity->buy_price == token, "Token price does not match");
-        
+
         // Send item
         eosio::action(
             eosio::permission_level{get_self(), eosio::name("active")},
@@ -49,9 +49,23 @@ void niftyshopper::receive_token_transfer(
                 std::string("Bought NFT")))
             .send();
 
-        if (entity->burn_token == true) {
+        if (entity->burn_token == true)
+        {
+            // Transfer the recieved tokens from us to the token contract
             eosio::action(
                 eosio::permission_level{get_self(), eosio::name("active")},
+                entity->token_contract,
+                eosio::name("transfer"),
+                std::make_tuple(
+                    get_self(),
+                    entity->token_contract,
+                    token,
+                    std::string("Automatic token burn after NFT sale")))
+                .send();
+
+            // Retire the tokens from the contract, requires @eosio.code access to the contract
+            eosio::action(
+                eosio::permission_level{entity->token_contract, eosio::name("active")},
                 entity->token_contract,
                 eosio::name("retire"),
                 std::make_tuple(
